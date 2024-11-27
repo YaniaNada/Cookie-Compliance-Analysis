@@ -34,9 +34,8 @@ def analyze_cookie_compliance(df, output_filename):
     # Split into essential and non-essential based on purpose
 
     def split_essential_and_non_essential(df):
-        essential_purposes = {'Functional', 'Operational Efficiency', 'Legal Obligations', 'Compliance', 'Fraud Prevention', 'Security'}
-        non_essential_purposes = {'Analytics', 'Service Improvement',
-        'Content Customization', 'Advertising', 'Customer Support',
+        essential_purposes = {'Functional', 'Service Improvement', 'Customer Support', 'Operational Efficiency', 'Legal Obligations', 'Compliance', 'Fraud Prevention', 'Security'}
+        non_essential_purposes = {'Analytics', 'Content Customization', 'Advertising',
         'Tracking', 'Social Media','Personalization', 'E-commerce', 'Compliance',
         'Performance Monitoring', 'Market Research', 'User Experience',
         'Customer Feedback'}
