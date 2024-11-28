@@ -124,7 +124,7 @@ def analyze_cookie_compliance(df, output_filename):
             if y.issubset(essential_purposes):
                 if (df['Origin'][i] == 'First-party') and cpolicy_essential.issubset(x):
                     alist.append(evaluate_policy(df['Origin'][i], collected_data, x, cpolicy_essential))
-                elif (df['Origin'][i] == 'Third-party') and (cpolicy_essential | third_party_policy).issubset(x):
+                elif (df['Origin'][i] == 'Third-party') and (df['SameParty (if cookie keeps data locally or sends it outside)'][i] == True) and (cpolicy_essential | third_party_policy).issubset(x):
                     alist.append(evaluate_policy(df['Origin'][i], collected_data, x, cpolicy_essential | third_party_policy))
                 else:
                     alist.append(False)
@@ -133,7 +133,7 @@ def analyze_cookie_compliance(df, output_filename):
             elif y.issubset(non_essential_purposes):
                 if (df['Origin'][i] == 'First-party') and cpolicy_non_essential.issubset(x):
                     alist.append(evaluate_policy(df['Origin'][i], collected_data, x, cpolicy_non_essential))
-                elif (df['Origin'][i] == 'Third-party') and (cpolicy_non_essential | third_party_policy).issubset(x):
+                elif (df['Origin'][i] == 'Third-party') and (df['SameParty (if cookie keeps data locally or sends it outside)'][i] == True) and (cpolicy_non_essential | third_party_policy).issubset(x):
                     alist.append(evaluate_policy(df['Origin'][i], collected_data, x, cpolicy_non_essential | third_party_policy))
                 else:
                     alist.append(False)
