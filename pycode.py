@@ -81,30 +81,30 @@ def analyze_cookie_compliance(df, output_filename):
 
     '''------------------------------------------------------------------------------------------'''
     # Check 3: Cookie policy compliance
-    from nltk import ngrams
-    def get_data_collected(data):
-        n=1
-        words = []
-        for i in range(len(data)):
-            unigrams = ngrams(data['Data Collected '][i].split(';'), n)
 
-            for grams in unigrams:
-                words.append(grams)
-
-        return words
-    
-    def collect_data(n):
-        data = df[n:n+1]
-        data.reset_index(inplace=True)
-        cust_fb_data = get_data_collected(data)
-        flattened = [item.strip() for sublist in cust_fb_data for item in sublist]
-        var = pd.Series(flattened).unique()
-
-        return var
     
     def is_policy_compliant(df):
-        alist = []
+        from nltk import ngrams
+        def get_data_collected(data):
+            n=1
+            words = []
+            for i in range(len(data)):
+                unigrams = ngrams(data['Data Collected '][i].split(';'), n)
 
+                for grams in unigrams:
+                    words.append(grams)
+
+            return words
+        
+        def collect_data(n):
+            data = df[n:n+1]
+            data.reset_index(inplace=True)
+            cust_fb_data = get_data_collected(data)
+            flattened = [item.strip() for sublist in cust_fb_data for item in sublist]
+            var = pd.Series(flattened).unique()
+
+            return var
+        
         # Function to evaluate conditions
         def evaluate_policy(origin, collected_data, x, policy_set):
             for item in collected_data:
@@ -113,7 +113,8 @@ def analyze_cookie_compliance(df, output_filename):
                         return True
                     return False
             return True
-
+        
+        alist = []
         # Iterate through the DataFrame rows
         for i in range(len(df['Cookie Policy'])):
             x = set(df['Cookie Policy'][i].split('\n'))  # Convert to a set for subset checking
