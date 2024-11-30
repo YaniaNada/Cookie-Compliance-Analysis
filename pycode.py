@@ -174,21 +174,26 @@ def analyze_cookie_compliance(df, output_filename):
         'Persistent Cookies': (df['Duration']=='Persistent').sum(),
         'Essential Cookies': (df['Essential/Non-essential']=='Essential').sum(),
         'Non-Essential Cookies': (df['Essential/Non-essential']=='Non-Essential').sum(),
-        'Compliant Cookies': (df['Is compliant']==True).sum(),
+        '\nTotal Compliant Cookies': (df['Is compliant']==True).sum(),
         'Non-Compliant Cookies': (df['Is compliant']==False).sum(),
-        'Compliance Rate (%)': (((df['Is compliant']==True).sum())/(df['Is compliant'].count())) * 100
+        'Compliance Rate (%)': (((df['Is compliant']==True).sum())/(df['Is compliant'].count())) * 100,
+        '\nEssential Cookies - Compliant': df[(df['Essential/Non-essential']=='Essential') & (df['Is compliant']==True)]['Is compliant'].count(),
+        'Non-Essential Cookies - Compliant': df[(df['Essential/Non-essential']=='Non-Essential') & (df['Is compliant']==True)]['Is compliant'].count(),
+        'Session Cookies - Compliant': df[(df['Duration']=='Session')&(df['Is compliant']==True)]['Is compliant'].count(),
+        'Persistent Cookies - Compliant': df[(df['Duration']=='Persistent')&(df['Is compliant']==True)]['Is compliant'].count()
+        
     }
 
     # Detailed breakdown of non-compliance reasons
     non_compliant_cookies = df[df['Is compliant'] == False]
 
-    # Save the analyzed data to a CSV file
-    df.to_csv(output_filename, index=False)
+    # Save the analyzed data to an excel file
+    #df.to_excel(output_filename, index=False)
     print(f"Analyzed data saved to {output_filename}")
 
     return df, compliance_summary
 
-compliant_df, summary,  = analyze_cookie_compliance(df, "cookie_compliance_analysis.csv")
+new_df, summary,  = analyze_cookie_compliance(df, "cookie_compliance_analysis.xlsx")
 
 # Display results
 print("\nCompliance Summary:")
