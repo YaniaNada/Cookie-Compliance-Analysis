@@ -15,8 +15,8 @@ non_essential_purposes = {'Analytics', 'Content Customization', 'Advertising',
 required_options = {'Decline All', 'Accept All', 'Customize'}
 
 # Data collected that are considered personal data:
-personal_data = {'IP Address', 'Session Data', 'Email Address', 'Phone Number', 'Payment Information',
-                'Geolocation', 'Purchase History', 'Download History'}
+personal_data = ['IP Address', 'Session Data', 'Email Address', 'Phone Number', 'Payment Information',
+                'Geolocation', 'Purchase History', 'Download History']
 
 # Key phrases to check in the cookie policy:
 policy_essential = {'Types of CookiesHere are some examples of the types of cookies we use:', 'Cookie Origin'}
@@ -87,18 +87,18 @@ def analyze_cookie_compliance(df, output_filename):
             else:
                 alist.append(True)
 
-        df['Banner_compliant'] = alist                  # New boolean field added to the dataframe that specify whether cookie is banner compliant or not
+        df['Banner_compliant'] = alist                                            # New boolean field added to the dataframe that specify whether cookie is banner compliant or not
         return df
 
     '''------------------------------------------------------------------------------------------'''
-    def collect_data(data, i):                                                    # Function to get the data collected for each cookie
+    def collect_data(data, i):                                                    # Function to get the data collected by each cookie
     
         for i in range(len(data)):
             words_list = (df['Data Collected '][i].split(';'))
         
         return words_list
 
-    def is_personal_data(dataframe, collected_data, cookie_policy_set):     # Function to check if personal data is in data collected,
+    def is_personal_data(dataframe, collected_data, cookie_policy_set):           # Function to check if personal data is in data collected,
         for item in collected_data:                                               # if collected then checking user rights is informed in the cookie policy
             if any(item in personal_data for item in collected_data):
                 if user_right_policy.issubset(cookie_policy_set):
@@ -114,24 +114,24 @@ def analyze_cookie_compliance(df, output_filename):
         alist = []
         for i in range(len(df['Cookie Policy'])):
             cookie_policy_set = set(df['Cookie Policy'][i].split('\n'))
-            y = {df['Purpose'][i]}
+            cookie_purpose = {df['Purpose'][i]}
             collected_data = collect_data(df,i)
 
             # Checking essential cookies are cookie policy compliant (refer decision tree for the rules):
-            if y.issubset(essential_purposes):
+            if cookie_purpose.issubset(essential_purposes):
                 if (df['Origin'][i] == 'First-party') and policy_essential.issubset(cookie_policy_set):
                     alist.append(is_personal_data(df['Origin'][i], collected_data, cookie_policy_set))
-                elif (df['Origin'][i] == 'Third-party') and (df['SameParty (if cookie keeps data locally or sends it outside)'][i] == True) and (policy_essential | third_party_policy).issubset(cookie_policy_set):
-                    alist.append(is_personal_data(df['Origin'][i], collected_data, cookie_policy_set | third_party_policy))
+                elif (df['Origin'][i] == 'Third-party') and (df['SameParty (if cookie keeps data locally or sends it outside)'][i] == True) and (policy_essential & third_party_policy).issubset(cookie_policy_set):
+                    alist.append(is_personal_data(df['Origin'][i], collected_data, cookie_policy_set))
                 else:
                     alist.append(False)
 
             # Checking non-essential cookies are cookie policy compliant (refer decision tree for the rules):
-            elif y.issubset(non_essential_purposes):
+            elif cookie_purpose.issubset(non_essential_purposes):
                 if (df['Origin'][i] == 'First-party') and policy_non_essential.issubset(cookie_policy_set):
                     alist.append(is_personal_data(df['Origin'][i], collected_data, cookie_policy_set))
-                elif (df['Origin'][i] == 'Third-party') and (df['SameParty (if cookie keeps data locally or sends it outside)'][i] == True) and (policy_non_essential | third_party_policy).issubset(cookie_policy_set):
-                    alist.append(is_personal_data(df['Origin'][i], collected_data, cookie_policy_set | third_party_policy))
+                elif (df['Origin'][i] == 'Third-party') and (df['SameParty (if cookie keeps data locally or sends it outside)'][i] == True) and (policy_non_essential & third_party_policy).issubset(cookie_policy_set):
+                    alist.append(is_personal_data(df['Origin'][i], collected_data, cookie_policy_set))
                 else:
                     alist.append(False)
 
@@ -188,7 +188,7 @@ def analyze_cookie_compliance(df, output_filename):
         'Non-Essential Cookies': (df['Essential/Non-essential']=='Non-Essential').sum()    
     }
 
-    # Save the analyzed data to an excel file
+    # Save the analyzed data to an excel file:
     df.to_excel(output_filename, index=False)
     print(f"Analyzed data saved to {output_filename}")
 
@@ -197,10 +197,9 @@ def analyze_cookie_compliance(df, output_filename):
 new_df, summary,  = analyze_cookie_compliance(df, "cookie_compliance_analysis.xlsx")
 
 
-# 3: Displaying key findings post-analysis.
+# 3: Displaying key findings post-analysis:
 
 print("\nCompliance Summary:\n")
 for key, value in summary.items():
     print(f"{key}: {value}")
 
-print(df[(df['Essential/Non-essential']=='Non-Essential') & (df['Is compliant']==True)]['Is compliant'])
