@@ -1,5 +1,4 @@
 import pandas as pd
-from nltk import ngrams 
 
 raw_data = pd.read_excel('cookie_compliance.xlsx')
 
