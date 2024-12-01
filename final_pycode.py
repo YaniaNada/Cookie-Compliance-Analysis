@@ -5,8 +5,10 @@ raw_data = pd.read_excel('cookie_compliance.xlsx')
 # Making a copy of the raw data to work with
 df = raw_data.copy()
 
-# Cookies classified by purpose seggregated into essential and non-essential:
+# cookie purpose that will be considered essential:
 essential_purposes = {'Functional', 'Service Improvement', 'Customer Support', 'Operational Efficiency', 'Legal Obligations', 'Compliance', 'Fraud Prevention', 'Security'}
+
+# cookie purpose that will be considered non-essential:
 non_essential_purposes = {'Analytics', 'Content Customization', 'Advertising',
                           'Tracking', 'Social Media','Personalization', 'E-commerce', 'Compliance',
                           'Performance Monitoring', 'Market Research', 'User Experience','Customer Feedback'}
@@ -14,14 +16,20 @@ non_essential_purposes = {'Analytics', 'Content Customization', 'Advertising',
 # Options required in the banner for all cookies:
 required_options = {'Decline All', 'Accept All', 'Customize'}
 
-# Data collected that are considered personal data:
+# These are data considered as personal data:
 personal_data = ['IP Address', 'Session Data', 'Email Address', 'Phone Number', 'Payment Information',
                 'Geolocation', 'Purchase History', 'Download History']
 
-# Key phrases to check in the cookie policy:
+# Key phrases to check for policy compliance in 'Cookie Policy' if cookie is essential:
 policy_essential = {'Types of CookiesHere are some examples of the types of cookies we use:', 'Cookie Origin'}
+
+# Key phrases to check for policy compliance in 'Cookie Policy' if cookie origin is third-party
 third_party_policy = {'Third-Party Processing'}
+
+# Key phrases to check for policy compliance in 'Cookie Policy' if data collected by cookie contains personal data
 user_right_policy = {'What Are Your Rights'}
+
+# Key phrases to check for policy compliance in 'Cookie Policy' if cookie is non-essential:
 policy_non_essential = {'Types of CookiesHere are some examples of the types of cookies we use:', 
                         'Cookie Origin', 'Third-Party Processing', 'Consent', 'Managing Cookies'}
 
@@ -55,7 +63,7 @@ def analyze_cookie_compliance(df, output_filename):
         return df
 
     ''' ---------------------------------------------------------------------------------------'''
-    # Split into essential and non-essential based on purpose
+    # Classifying the cookies as essential or non-essential for further analysis
 
     def split_essential_and_non_essential(df):
         alist = []
@@ -67,7 +75,7 @@ def analyze_cookie_compliance(df, output_filename):
                 alist.append('Non-Essential')
         df['Essential/Non-essential'] = alist
         return df
-    split_essential_and_non_essential(df)           # Classifying the cookies as essential or non-essential for further analysis
+    split_essential_and_non_essential(df)           
     '''-----------------------------------------------------------------------------------'''
 
     # *CHECK 2: Cookie banner compliance for non-essential cookies, not required for essential cookies*
@@ -139,8 +147,8 @@ def analyze_cookie_compliance(df, output_filename):
         return df
 
     '''--------------------------------------------------------------------------------------'''
-    
-    def total_compliance_check(df):                     # Function to conduct total cookie compliance check
+    # Function to conduct total cookie compliance check
+    def total_compliance_check(df):                     
         
         is_retention_compliant(df)                      # Testing retention compliance
         is_banner_compliant(df)                         # Testing banner compliance
@@ -162,7 +170,7 @@ def analyze_cookie_compliance(df, output_filename):
         return df
     '''---------------------------------------------------------------------------------------------'''
     
-    # Calling all functions:
+    # Calling all functions to check compliance in one shot:
     total_compliance_check(df)                          
 
     # Summary of Compliance:
