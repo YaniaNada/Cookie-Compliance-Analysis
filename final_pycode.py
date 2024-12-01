@@ -67,7 +67,7 @@ def analyze_cookie_compliance(df, output_filename):
                 alist.append('Non-Essential')
         df['Essential/Non-essential'] = alist
         return df
-    
+    split_essential_and_non_essential(df)           # Classifying the cookies as essential or non-essential for further analysis
     '''-----------------------------------------------------------------------------------'''
 
     # *CHECK 2: Cookie banner compliance for non-essential cookies, not required for essential cookies*
@@ -98,10 +98,10 @@ def analyze_cookie_compliance(df, output_filename):
         
         return words_list
 
-    def is_personal_data(dataframe, collected_data, x, policy_set):     # Function to check if personal data is in data collected,
+    def is_personal_data(dataframe, collected_data, cookie_policy_set):     # Function to check if personal data is in data collected,
         for item in collected_data:                                               # if collected then checking user rights is informed in the cookie policy
             if any(item in personal_data for item in collected_data):
-                if user_right_policy.issubset(x):
+                if user_right_policy.issubset(cookie_policy_set):
                     return True
                 return False
         return True
@@ -120,18 +120,18 @@ def analyze_cookie_compliance(df, output_filename):
             # Checking essential cookies are cookie policy compliant (refer decision tree for the rules):
             if y.issubset(essential_purposes):
                 if (df['Origin'][i] == 'First-party') and policy_essential.issubset(cookie_policy_set):
-                    alist.append(is_personal_data(df['Origin'][i], collected_data, cookie_policy_set, policy_essential))
+                    alist.append(is_personal_data(df['Origin'][i], collected_data, cookie_policy_set))
                 elif (df['Origin'][i] == 'Third-party') and (df['SameParty (if cookie keeps data locally or sends it outside)'][i] == True) and (policy_essential | third_party_policy).issubset(cookie_policy_set):
-                    alist.append(is_personal_data(df['Origin'][i], collected_data, cookie_policy_set, policy_essential | third_party_policy))
+                    alist.append(is_personal_data(df['Origin'][i], collected_data, cookie_policy_set | third_party_policy))
                 else:
                     alist.append(False)
 
             # Checking non-essential cookies are cookie policy compliant (refer decision tree for the rules):
             elif y.issubset(non_essential_purposes):
                 if (df['Origin'][i] == 'First-party') and policy_non_essential.issubset(cookie_policy_set):
-                    alist.append(is_personal_data(df['Origin'][i], collected_data, cookie_policy_set, policy_non_essential))
+                    alist.append(is_personal_data(df['Origin'][i], collected_data, cookie_policy_set))
                 elif (df['Origin'][i] == 'Third-party') and (df['SameParty (if cookie keeps data locally or sends it outside)'][i] == True) and (policy_non_essential | third_party_policy).issubset(cookie_policy_set):
-                    alist.append(is_personal_data(df['Origin'][i], collected_data, cookie_policy_set, policy_non_essential | third_party_policy))
+                    alist.append(is_personal_data(df['Origin'][i], collected_data, cookie_policy_set | third_party_policy))
                 else:
                     alist.append(False)
 
@@ -143,7 +143,6 @@ def analyze_cookie_compliance(df, output_filename):
     def total_compliance_check(df):                     # Function to conduct total cookie compliance check
         
         is_retention_compliant(df)                      # Testing retention compliance
-        split_essential_and_non_essential(df)           # Classifying the cookies as essential or non-essential for further analysis
         is_banner_compliant(df)                         # Testing banner compliance
         is_policy_compliant(df)                         # Testing cookie policy compliance
         alist=[]
