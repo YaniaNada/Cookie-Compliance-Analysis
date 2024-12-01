@@ -98,22 +98,22 @@ def analyze_cookie_compliance(df, output_filename):
 
         def get_data_collected(data):                   # Function to breakdown the data collected by cookies and store the values in a list
             n=1                                         # The function returns a list of tuples
-            words = []
+            words_list = []
             for i in range(len(data)):
                 unigrams = ngrams(data['Data Collected '][i].split(';'), n)
 
                 for grams in unigrams:
-                    words.append(grams)
+                    words_list.append(grams)
 
-            return words                                
+            return words_list                                
         
         def collect_data(n):                            # Function to get the list of tuples of collected data for each cookie and,
             data = df[n:n+1]                            # converting into series for accessibility
             data.reset_index(inplace=True)
-            cust_fb_data = get_data_collected(data)
-            flattened = [item.strip() for sublist in cust_fb_data for item in sublist]
-            var = pd.Series(flattened).unique()
-            return var
+            collected_tuple_list = get_data_collected(data)
+            flattened = [item.strip() for sublist in collected_tuple_list for item in sublist]
+            collected_data_series = pd.Series(flattened).unique()
+            return collected_data_series
         
         
         def is_personal_data(origin, collected_data, x, policy_set):         # Checking if personal data is in the data collected, 
