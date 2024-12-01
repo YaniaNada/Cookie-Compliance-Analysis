@@ -1,6 +1,6 @@
 import pandas as pd
 
-raw_data = pd.read_excel('cookie_compliance.xlsx')
+raw_data = pd.read_excel('cookie_compliance_data.xlsx')
 
 # Making a copy of the raw data to work with
 df = raw_data.copy()
