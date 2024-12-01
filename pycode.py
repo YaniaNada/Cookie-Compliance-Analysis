@@ -191,7 +191,7 @@ def analyze_cookie_compliance(df, output_filename):
     }
 
     # Save the analyzed data to an excel file
-    #df.to_excel(output_filename, index=False)
+    df.to_excel(output_filename, index=False)
     print(f"Analyzed data saved to {output_filename}")
 
     return df, compliance_summary
