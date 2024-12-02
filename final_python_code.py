@@ -31,7 +31,7 @@ user_right_policy = {'What Are Your Rights'}
 
 # Key phrases to check for policy compliance in 'Cookie Policy' if cookie is non-essential:
 policy_non_essential = {'Types of CookiesHere are some examples of the types of cookies we use:', 
-                        'Cookie Origin', 'Third-Party Processing', 'Consent', 'Managing Cookies'}
+                        'Cookie Origin', 'Consent', 'Managing Cookies'}
 
 
 # 1: Cleaning up the data by removing unnecessary fields and transforming fields as necessary.
@@ -127,18 +127,18 @@ def analyze_cookie_compliance(df, output_filename):
 
             # Checking essential cookies are cookie policy compliant (refer decision tree for the rules):
             if cookie_purpose.issubset(essential_purposes):
-                if (df['Origin'][i] == 'First-party') and policy_essential.issubset(cookie_policy_set):
+                if (df['SameParty (if cookie keeps data locally or sends it outside)'][i] == False) and (policy_essential & third_party_policy).issubset(cookie_policy_set):
                     alist.append(is_personal_data(df['Origin'][i], collected_data, cookie_policy_set))
-                elif (df['Origin'][i] == 'Third-party') and (df['SameParty (if cookie keeps data locally or sends it outside)'][i] == True) and (policy_essential & third_party_policy).issubset(cookie_policy_set):
+                elif (df['SameParty (if cookie keeps data locally or sends it outside)'][i] == True) and (policy_essential).issubset(cookie_policy_set):
                     alist.append(is_personal_data(df['Origin'][i], collected_data, cookie_policy_set))
                 else:
                     alist.append(False)
 
             # Checking non-essential cookies are cookie policy compliant (refer decision tree for the rules):
             elif cookie_purpose.issubset(non_essential_purposes):
-                if (df['Origin'][i] == 'First-party') and policy_non_essential.issubset(cookie_policy_set):
+                if (df['SameParty (if cookie keeps data locally or sends it outside)'][i] == False) and (policy_non_essential & third_party_policy).issubset(cookie_policy_set):
                     alist.append(is_personal_data(df['Origin'][i], collected_data, cookie_policy_set))
-                elif (df['Origin'][i] == 'Third-party') and (df['SameParty (if cookie keeps data locally or sends it outside)'][i] == True) and (policy_non_essential & third_party_policy).issubset(cookie_policy_set):
+                elif (df['SameParty (if cookie keeps data locally or sends it outside)'][i] == True) and (policy_non_essential).issubset(cookie_policy_set):
                     alist.append(is_personal_data(df['Origin'][i], collected_data, cookie_policy_set))
                 else:
                     alist.append(False)
