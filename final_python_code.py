@@ -95,7 +95,7 @@ def analyze_cookie_compliance(df, output_filename):
             else:
                 alist.append(True)
 
-        df['Banner_compliant'] = alist                                            # New boolean field added to the dataframe that specify whether cookie is banner compliant or not
+        df['Consent_compliant'] = alist                                            # New boolean field added to the dataframe that specify whether cookie is banner compliant or not
         return df
 
     '''------------------------------------------------------------------------------------------'''
@@ -143,7 +143,7 @@ def analyze_cookie_compliance(df, output_filename):
                 else:
                     alist.append(False)
 
-        df['Policy compliant'] = alist                  # New boolean field added to the dataframe that specify whether cookie is policy compliant or not
+        df['Transparency compliant'] = alist                  # New boolean field added to the dataframe that specify whether cookie is policy compliant or not
         return df
 
     '''--------------------------------------------------------------------------------------'''
@@ -156,8 +156,8 @@ def analyze_cookie_compliance(df, output_filename):
         alist=[]
         for i in range(len(df)):
             if df['Retention compliant'][i]==True:
-                if df['Banner_compliant'][i]==True:
-                    if df['Policy compliant'][i]==True:
+                if df['Consent_compliant'][i]==True:
+                    if df['Transparency compliant'][i]==True:
                         alist.append(True)
                     else:
                         alist.append(False)
@@ -178,8 +178,8 @@ def analyze_cookie_compliance(df, output_filename):
     compliance_summary = {
         'Overall compliance Rate (%)': (((df['Is compliant']==True).sum())/(df['Is compliant'].count())) * 100,
         'Retention compliance rate (%)': ((df['Retention compliant']==True).sum()/(df['Is compliant'].count()))*100,
-        'Banner compliance rate (%)': ((df['Banner_compliant']==True).sum()/(df['Is compliant'].count()))*100,
-        'Policy compliance rate (%)': ((df['Policy compliant']==True).sum()/(df['Is compliant'].count()))*100,
+        'Consent compliance rate (%)': ((df['Consent_compliant']==True).sum()/(df['Is compliant'].count()))*100,
+        'Transparency compliance rate (%)': ((df['Transparency compliant']==True).sum()/(df['Is compliant'].count()))*100,
 
         '\nTotal compliant cookies': (df['Is compliant']==True).sum(),
         'Non-compliant cookies': (df['Is compliant']==False).sum(),
