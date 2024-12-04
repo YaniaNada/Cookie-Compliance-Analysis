@@ -58,7 +58,8 @@ def analyze_cookie_compliance(df, output_filename):
     def is_retention_compliant(df):
 
         # New boolean field added to the dataframe that specify whether cookie is retention compliant or not:
-        df['Retention compliant'] = ((df['Duration'] == 'Session')&(df['expiration (in years)'] <1))|(
+        # Expiration period less than 1 week for session cookies and less than 2 years for persistent cookies
+        df['Retention compliant'] = ((df['Duration'] == 'Session')&(df['expiration (in years)'] <0.02))|(
             (df['Duration'] == 'Persistent')&(df['expiration (in years)'] < 2))
         return df
 
