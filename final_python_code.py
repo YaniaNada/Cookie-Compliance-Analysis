@@ -13,9 +13,6 @@ non_essential_purposes = {'Analytics', 'Content Customization', 'Advertising',
                           'Tracking', 'Social Media','Personalization', 'E-commerce', 'Compliance',
                           'Performance Monitoring', 'Market Research', 'User Experience','Customer Feedback'}
 
-# Options required in the banner for all cookies:
-required_options = {'Decline All', 'Accept All', 'Customize'}
-
 # These are data considered as personal data:
 personal_data = ['IP Address', 'Session Data', 'Email Address', 'Phone Number', 'Payment Information',
                 'Geolocation', 'Purchase History', 'Download History']
@@ -87,7 +84,7 @@ def analyze_cookie_compliance(df, output_filename):
             if (df['Essential/Non-essential'][i]== 'Non-Essential'):
                 if (df['Cookie Banner'][i] == True):
                     x= df['Cookie Options'][i]
-                    if required_options.issubset(x):
+                    if x == 'Decline All, Accept All, Customize cookies':          # Options required in the banner for all cookies
                         alist.append(True)
                     else:
                         alist.append(False)
