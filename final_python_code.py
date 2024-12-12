@@ -39,7 +39,8 @@ policy_non_essential = {'Types of CookiesHere are some examples of the types of 
 def clean_and_transform(df):
 
     # Dropping irrelevant fields
-    df.drop(['Cookie Name','Domain','Secure', 'HttpOnly', 'SameSite', 'Path', 'Priority', 'Partitioned','Creation Date', 'Last Accessed', 'Size (KB)', 'Host Only'], axis = 1, inplace = True)
+    df.drop(['Cookie Name','Domain','Secure', 'HttpOnly', 'SameSite', 'Path', 'Priority', 
+             'Partitioned','Creation Date', 'Last Accessed', 'Size (KB)', 'Host Only'], axis = 1, inplace = True)
     
     # Converting cookie expiration period from seconds to years
     df['expiration (in years)'] = (((df['Expires / Max-Age (in seconds)']/60)/60)/24)/365
@@ -90,7 +91,7 @@ def analyze_cookie_compliance(df, output_filename):
                 if (df['Cookie Banner'][i] == True):
                     x= df['Cookie Options'][i]
 
-                    if x == 'Decline All, Accept All, Customize cookies':          # Options required in the banner for all cookies
+                    if x == 'Decline All, Accept All, Customize cookies':         
                         alist.append(True)
                     else:
                         alist.append(False)
@@ -101,13 +102,13 @@ def analyze_cookie_compliance(df, output_filename):
             else:
                 alist.append(True)
 
-        df['Consent_compliant'] = alist                                            # New boolean field added to the dataframe that specify whether cookie is banner compliant or not
+        df['Consent_compliant'] = alist                                           
         return df
 
     '''------------------------------------------------------------------------------------------'''
     
     # Helper function to extract data collected by each cookie
-    def collect_data(data, i):                                                    # Function to get the data collected by each cookie
+    def collect_data(data, i):                                                   
     
         for i in range(len(data)):
             words_list = (df['Data Collected '][i].split(';'))
