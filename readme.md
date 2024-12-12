@@ -2,6 +2,7 @@ Objective: Analyze a dataset of cookies and assess their compliance with GDPR re
 
 The compliance is mesaured across 7 key attributes:
 
+![alt text](https://github.com/yanianada/Final-project/blob/main/key_attributes_for_GDPR_compliance.png?raw=true)
 
 This is a quick summary of the analysis:
 
