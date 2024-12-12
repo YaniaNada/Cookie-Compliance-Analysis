@@ -266,7 +266,7 @@ def analyze_cookie_compliance(df, output_filename):
 
     return df, compliance_summary
 
-new_df, summary,  = analyze_cookie_compliance(df, "cookie_compliance_analysis.xlsx")
+new_df, summary,  = analyze_cookie_compliance(df, "output/cookie_compliance_analysis.xlsx")
 
 
 # 3: Displaying key findings post-analysis:

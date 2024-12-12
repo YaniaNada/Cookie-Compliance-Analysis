@@ -8,11 +8,11 @@ The overall compliance was measured across 3 key attributes:
 
 These are the ruleset used for the compliance decision tree:
 
-![alt text](https://github.com/yanianada/Final-project/blob/main/key_attributes_for_GDPR_compliance.png?raw=true)
+![alt text](https://github.com/yanianada/Final-project/blob/main/images/key_attributes_for_GDPR_compliance.png?raw=true)
 
 Here is a quick summary of the analysis:
 
-![alt text](https://github.com/yanianada/Final-project/blob/main/analysis_summary.png?raw=true)
+![alt text](https://github.com/yanianada/Final-project/blob/main/images/analysis_summary.png?raw=true)
 
 This is the link to compliance dashboard:
 
