@@ -6,5 +6,7 @@ The compliance is mesaured across 7 key attributes:
 
 This is a quick summary of the analysis:
 
+![alt text](https://github.com/yanianada/Final-project/blob/main/analysis_summary.png?raw=true)
+
 Here is the link to compliance dashboard:
 
