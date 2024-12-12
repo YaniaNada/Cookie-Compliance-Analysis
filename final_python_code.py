@@ -144,6 +144,71 @@ def analyze_cookie_compliance(df, output_filename):
         df['Transparency compliant'] = alist                  # New boolean field added to the dataframe that specify whether cookie is policy compliant or not
         return df
 
+    # Deep dive: Cookie policy non compliance reasons:
+    # Key words to look for in 'Cookie Policy'
+    policy_basic = {'Types of CookiesHere are some examples of the types of cookies we use:'}
+    policy_cookie_origin = {'Cookie Origin'}
+    policy_third_party = {'Third-Party Processing'}
+    policy_consent = {'Consent'}
+    policy_managing_cookies = {'Managing Cookies'}
+    user_right_policy = {'What Are Your Rights'}
+
+    def policy_non_compliant_reasons(df): 
+
+        policy_basic_list =[]
+        policy_cookie_origin_list =[]
+        policy_consent_list = []
+        policy_manage_cookies_list = []
+        policy_for_third_party_list = []
+        policy_user_right_list = []
+        
+        for i in range(len(df['Cookie Policy'])):
+            cookie_policy_in_set = set(df['Cookie Policy'][i].split('\n'))  # Converting cookie policy content into a set of data
+            cookie_purpose = {df['Purpose'][i]}                             # Converting cookie purpose into a set for checking in other sets of data later
+            collected_data = collect_data(df, i)                            # calling 'collect_data' function to get list of data collected by each cookie
+
+            if (policy_basic).issubset(cookie_policy_in_set):
+                policy_basic_list.append(True)
+            else:
+                policy_basic_list.append(False)
+
+            
+            if (policy_cookie_origin).issubset(cookie_policy_in_set):
+                policy_cookie_origin_list.append(True)
+            else:
+                policy_cookie_origin_list.append(False)
+
+            
+            if (policy_consent).issubset(cookie_policy_in_set):
+                policy_consent_list.append(True)
+            else:
+                policy_consent_list.append(False)
+
+            
+            if (policy_managing_cookies).issubset(cookie_policy_in_set):
+                policy_manage_cookies_list.append(True)
+            else:
+                policy_manage_cookies_list.append(False)
+            
+            if user_right_policy.issubset(cookie_policy_in_set):
+                policy_user_right_list.append(True)
+            else:
+                policy_user_right_list.append(False)
+
+            if policy_third_party.issubset(cookie_policy_in_set):
+                policy_for_third_party_list.append(True)
+            else:
+                policy_for_third_party_list.append(False)
+                    
+        df['cookie type informed'] = policy_basic_list
+        df['cookie origin informed'] = policy_cookie_origin_list
+        df['consent asked'] = policy_consent_list
+        df['manage cookies informed'] = policy_manage_cookies_list
+        df['Third party policy informed'] = policy_for_third_party_list
+        df['user right informed'] = policy_user_right_list
+
+        return df                                                       # function returns the updated dataframe
+
     '''--------------------------------------------------------------------------------------'''
     # Function to conduct total cookie compliance check
     def total_compliance_check(df):                     
@@ -164,6 +229,7 @@ def analyze_cookie_compliance(df, output_filename):
             else:
                 alist.append(False)
         df['Is compliant'] = alist                      # New boolean field that finally specify whether cookie is compliant or not
+        policy_non_compliant_reasons(df)                # adding new boolean fields to the dataframe for policy non-compliance reasons
         df.reset_index(inplace=True)
         return df
     '''---------------------------------------------------------------------------------------------'''
